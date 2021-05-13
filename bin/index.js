@@ -57,7 +57,7 @@ const argv = hideBin(process.argv);
 if (argv.length === 1) {
 	snapURL(argv[0])
 } else {
-	yargs()
+	yargs(argv)
 		.command(
 			'<url>',
 			'Website URL',
@@ -65,8 +65,10 @@ if (argv.length === 1) {
 				alias: 'u',
 				describe: 'The url to take a snapshot of'
 			}),
-			argv => {
-				snapURL(argv.url);
+			({ _: [cmd, url] }) => {
+				if(cmd === 'url') {
+					snapURL(url);
+				}
 			}
 		)
 		.demandCommand(1)
