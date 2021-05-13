@@ -1,16 +1,19 @@
 {
 	"name": "website-snapper",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "",
 	"main": "bin/index.js",
 	"type": "module",
 	"bin": {
-		"snap": "./bin/index.js"
+		"snap": "bin/index.js"
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
-	"keywords": ["cli", "snapshot"],
+	"keywords": [
+		"cli",
+		"snapshot"
+	],
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
