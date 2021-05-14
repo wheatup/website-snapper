@@ -17,22 +17,24 @@ const logBox = text => {
 };
 
 const snapURL = url => {
-	url = url.replace(/^(?!https?:\/\/)/, 'https://');
-	if (!/\./[Symbol.match](url)) {
-		url += '.com';
+	if(!url?.trim()) {
+		console.error('Please enter a URL!');
+		process.exit();
+		return;
 	}
-	logBox(chalk.white('Opening ') + chalk.green(url) + chalk.white(' ...'));
+	url = url.replace(/^(?!\w+:\/\/)/, 'https://').replace(/^(?!.*\.)(.*)$/, '$1.com');
+	logBox(chalk.white('Opening ') + chalk.green(url));
 
 	(async () => {
-		const browser = await puppeteer.launch({
-			defaultViewport: {
-				width: Math.max(process.stdout.columns * 8, 800),
-				height: Math.max(process.stdout.columns * 8 * (9 / 16), 800 * (9 / 16))
-			}
-		});
-		const page = await browser.newPage();
-
+		let browser;
 		try {
+			browser = await puppeteer.launch({
+				defaultViewport: {
+					width: Math.max(~~(process.stdout.columns * 8), 800),
+					height: Math.max(~~(process.stdout.columns * 8 * (9 / 16)), 450)
+				}
+			});
+			const page = await browser.newPage();
 			const fileName = `__temp__${~~(Math.random() * 1e8)}.png`
 			await page.goto(url);
 			const dimensions = await page.evaluate(() => ({
@@ -46,7 +48,7 @@ const snapURL = url => {
 		} catch (ex) {
 			console.log('Error: ' + ex.message);
 		} finally {
-			await browser.close();
+			await browser?.close();
 			process.exit();
 		}
 	})();
@@ -66,7 +68,7 @@ if (argv.length === 1) {
 				describe: 'The url to take a snapshot of'
 			}),
 			({ _: [cmd, url] }) => {
-				if(cmd === 'url') {
+				if (cmd === 'url') {
 					snapURL(url);
 				}
 			}
